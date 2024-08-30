@@ -1,8 +1,12 @@
 code_version: v6.4
 group_name: ''
 
-llm: 
-  path: TheBloke/Nous-Hermes-2-Mixtral-8x7B-DPO-GPTQ
+llm:
+  num: 3
+  path:
+    - TheBloke/phi-2-GGUF
+    - TheBloke/CapybaraHermes-2.5-Mistral-7B-GGUF
+    - TheBloke/Llama-2-7B-GGUF
   backend: transformers
   is_api: false
   render: false
@@ -11,8 +15,6 @@ llm:
 
 seed: 42
 debug: false
-
-# Ideally we would only need to change the following two lines to run a different experiments
   
 
 defaults:

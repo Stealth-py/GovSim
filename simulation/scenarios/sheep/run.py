@@ -3,17 +3,19 @@ import os
 import numpy as np
 from omegaconf import DictConfig, OmegaConf
 
+from typing import List
+
 from simulation.persona import EmbeddingModel
 from simulation.persona.common import PersonaIdentity
-from simulation.utils import ModelWandbWrapper
+from simulation.utils import ModelWandbWrapper, WandbLogger
 
 from .environment import SheepConcurrentEnv, SheepPerturbationEnv
 
 
 def run(
     cfg: DictConfig,
-    logger: ModelWandbWrapper,
-    wrapper: ModelWandbWrapper,
+    logger: WandbLogger,
+    wrappers: List[ModelWandbWrapper],
     embedding_model: EmbeddingModel,
     experiment_storage: str,
 ):
@@ -34,18 +36,18 @@ def run(
     else:
         raise ValueError(f"Unknown agent package: {cfg.agent.agent_package}")
 
+    # NOTE persona characteristics, up to design choices
+    num_personas = cfg.personas.num
+
     personas = {
         f"persona_{i}": SheepPersona(
             cfg.agent,
-            wrapper,
+            wrappers[i],
             embedding_model,
             os.path.join(experiment_storage, f"persona_{i}"),
         )
-        for i in range(5)
+        for i in range(num_personas)
     }
-
-    # NOTE persona characteristics, up to design choices
-    num_personas = cfg.personas.num
 
     identities = {}
     for i in range(num_personas):

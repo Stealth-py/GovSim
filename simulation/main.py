@@ -24,7 +24,11 @@ def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
     set_seed(cfg.seed)
 
-    model = get_model(cfg.llm.path, cfg.llm.is_api, cfg.seed, cfg.llm.backend)
+    models = [
+        get_model(cfg.llm.path[i], cfg.llm.is_api, cfg.seed, cfg.llm.backend)
+        for i in range(cfg.llm.num)
+    ]
+
     logger = WandbLogger(cfg.experiment.name, OmegaConf.to_object(cfg), debug=cfg.debug)
 
     experiment_storage = os.path.join(
@@ -32,22 +36,25 @@ def main(cfg: DictConfig):
         f"./results/{cfg.experiment.name}/{logger.run_name}",
     )
 
-    wrapper = ModelWandbWrapper(
-        model,
-        render=cfg.llm.render,
-        wanbd_logger=logger,
-        temperature=cfg.llm.temperature,
-        top_p=cfg.llm.top_p,
-        seed=cfg.seed,
-        is_api=cfg.llm.is_api,
-    )
+    wrappers = [
+        ModelWandbWrapper(
+            models[i],
+            render=cfg.llm.render,
+            wanbd_logger=logger,
+            temperature=cfg.llm.temperature,
+            top_p=cfg.llm.top_p,
+            seed=cfg.seed,
+            is_api=cfg.llm.is_api,
+        )
+        for i in range(cfg.llm.num)
+    ]
     embedding_model = EmbeddingModel(device="cpu")
 
     if cfg.experiment.scenario == "fishing":
         run_scenario_fishing(
             cfg.experiment,
             logger,
-            wrapper,
+            wrappers,
             embedding_model,
             experiment_storage,
         )
@@ -55,7 +62,7 @@ def main(cfg: DictConfig):
         run_scenario_sheep(
             cfg.experiment,
             logger,
-            wrapper,
+            wrappers,
             embedding_model,
             experiment_storage,
         )
@@ -63,7 +70,7 @@ def main(cfg: DictConfig):
         run_scenario_pollution(
             cfg.experiment,
             logger,
-            wrapper,
+            wrappers,
             embedding_model,
             experiment_storage,
         )
