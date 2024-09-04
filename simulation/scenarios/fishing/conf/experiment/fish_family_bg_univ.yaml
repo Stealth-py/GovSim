@@ -1,0 +1,10 @@
+defaults:
+  - fish_baseline_concurrent_universalization
+  - override persona@personas.persona_0: tiny_family_fisherman
+  - override persona@personas.persona_1: average_family_fisherman
+  - override persona@personas.persona_2: large_family_fisherman
+  - override persona@personas.persona_3: traditional_fisherman
+  - override persona@personas.persona_4: traditional_fisherman
+
+env:
+  name: fish_family_bg_univ

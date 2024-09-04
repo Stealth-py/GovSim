@@ -17,6 +17,7 @@ def run(
     wrappers: List[ModelWandbWrapper],
     embedding_model: EmbeddingModel,
     experiment_storage: str,
+    exp_type: str,
 ):
     if cfg.agent.agent_package == "persona_v3":
         from .agents.persona_v3 import FishingPersona
@@ -37,15 +38,26 @@ def run(
 
     num_personas = cfg.personas.num
 
-    personas = {
-        f"persona_{i}": FishingPersona(
-            cfg.agent,
-            wrappers[i],
-            embedding_model,
-            os.path.join(experiment_storage, f"persona_{i}"),
-        )
-        for i in range(num_personas)
-    }
+    if exp_type == "single":
+        personas = {
+            f"persona_{i}": FishingPersona(
+                cfg.agent,
+                wrappers[0],
+                embedding_model,
+                os.path.join(experiment_storage, f"persona_{i}"),
+            )
+            for i in range(num_personas)
+        }
+    else:
+        personas = {
+            f"persona_{i}": FishingPersona(
+                cfg.agent,
+                wrappers[i],
+                embedding_model,
+                os.path.join(experiment_storage, f"persona_{i}"),
+            )
+            for i in range(num_personas)
+        }
 
     identities = {}
     for i in range(num_personas):
@@ -89,7 +101,7 @@ def run(
         stats = {}
         STATS_KEYS = [
             "conversation_resource_limit",
-            *[f"persona_{i}_collected_resource" for i in range(5)],
+            *[f"persona_{i}_collected_resource" for i in range(num_personas)],
         ]
         for s in STATS_KEYS:
             if s in action.stats:

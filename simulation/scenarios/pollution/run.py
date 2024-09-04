@@ -16,6 +16,7 @@ def run(
     wrappers: List[ModelWandbWrapper],
     embedding_model: EmbeddingModel,
     experiment_storage: str,
+    exp_type: str,
 ):
     if cfg.agent.agent_package == "persona_v3":
         from .agents.persona_v3 import PollutionPersona
@@ -34,18 +35,28 @@ def run(
     else:
         raise ValueError(f"Unknown agent package: {cfg.agent.agent_package}")
     
-    # NOTE persona characteristics, up to design choices
     num_personas = cfg.personas.num
 
-    personas = {
-        f"persona_{i}": PollutionPersona(
-            cfg.agent,
-            wrappers[i],
-            embedding_model,
-            os.path.join(experiment_storage, f"persona_{i}"),
-        )
-        for i in range(num_personas)
-    }
+    if exp_type == "single":
+        personas = {
+            f"persona_{i}": PollutionPersona(
+                cfg.agent,
+                wrappers[0],
+                embedding_model,
+                os.path.join(experiment_storage, f"persona_{i}"),
+            )
+            for i in range(num_personas)
+        }
+    else:
+        personas = {
+            f"persona_{i}": PollutionPersona(
+                cfg.agent,
+                wrappers[i],
+                embedding_model,
+                os.path.join(experiment_storage, f"persona_{i}"),
+            )
+            for i in range(num_personas)
+        }
 
     identities = {}
     for i in range(num_personas):

@@ -19,15 +19,25 @@ from .scenarios.pollution.run import run as run_scenario_pollution
 from .scenarios.sheep.run import run as run_scenario_sheep
 
 
+EXP_TYPE = None
+
+
 @hydra.main(version_base=None, config_path="conf", config_name="config")
 def main(cfg: DictConfig):
     print(OmegaConf.to_yaml(cfg))
     set_seed(cfg.seed)
 
-    models = [
-        get_model(cfg.llm.path[i], cfg.llm.is_api, cfg.seed, cfg.llm.backend)
-        for i in range(cfg.llm.num)
-    ]
+    EXP_TYPE = cfg.llm.exp_type
+
+    if EXP_TYPE == "single":
+        models = [get_model(cfg.llm.path[0], cfg.llm.is_api, cfg.seed, cfg.llm.backend)]
+    elif EXP_TYPE == "multi":
+        models = [
+            get_model(cfg.llm.path[i], cfg.llm.is_api, cfg.seed, cfg.llm.backend)
+            for i in range(cfg.llm.num)
+        ]
+    else:
+        raise ValueError(f"Unknown llm.exp_type: {EXP_TYPE}. Expected 'single' or 'multi'.")
 
     logger = WandbLogger(cfg.experiment.name, OmegaConf.to_object(cfg), debug=cfg.debug)
 
@@ -57,6 +67,7 @@ def main(cfg: DictConfig):
             wrappers,
             embedding_model,
             experiment_storage,
+            EXP_TYPE,
         )
     elif cfg.experiment.scenario == "sheep":
         run_scenario_sheep(
@@ -65,6 +76,7 @@ def main(cfg: DictConfig):
             wrappers,
             embedding_model,
             experiment_storage,
+            EXP_TYPE,
         )
     elif cfg.experiment.scenario == "pollution":
         run_scenario_pollution(
@@ -73,6 +85,7 @@ def main(cfg: DictConfig):
             wrappers,
             embedding_model,
             experiment_storage,
+            EXP_TYPE,
         )
     else:
         raise ValueError(f"Unknown experiment.scenario: {cfg.experiment.scenario}")
