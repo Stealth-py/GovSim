@@ -1,0 +1,28 @@
+defaults:
+  - fish_baseline_concurrent_universalization
+  - override persona@personas.persona_0: traditional_fisherman
+  - override persona@personas.persona_1: traditional_fisherman
+  - override persona@personas.persona_2: traditional_fisherman
+  - override persona@personas.persona_3: traditional_fisherman
+  - override persona@personas.persona_4: traditional_fisherman
+
+env:
+  name: fish_family_univ
+
+personas:
+  num: 5
+  persona_0: 
+    name: John
+    background: "You are a family fisherman who lives in a family size of 2 people -- you and your partner. You wish to be efficient while fishing so that you can feed your family well. Each family member requires at least 2 tons."
+  persona_1:
+    name: Kate
+    background: "You are a family fisherman who lives in a family size of 4 people -- you, your partner and 2 children. You wish to be efficient while fishing so that you can feed your family well. Your kids require at least 1 ton and everyone else require at least 2 tons."
+  persona_2:
+    name: Jack
+    background: "You are a family fisherman who lives in a family size of 8 people -- you, your partner, 2 children and 4 elders. You wish to be efficient while fishing so that you can feed your family well. Your kids require at least 1 ton and everyone else require at least 2 tons."
+  persona_3:
+    name: Emma
+    background: "You are a solo fisherman who lives alone. You require at least 2 tons."
+  persona_4:
+    name: Luke
+    background: "You are a solo fisherman who lives alone. You require at least 2 tons."

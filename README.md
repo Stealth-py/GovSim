@@ -12,13 +12,14 @@ python3 -m simulation.main experiment=<experiment_id> llm.path=<path_to_llm>
 
 
 ### Table of experiments
-| Experiment in the paper      | Fishery  | Pasture | Pollution | 
+| Experiment in the paper      | Fishery  | Pasture | Pollution |
 | ------------------------------------ |---------------- |-------------------- | -------------- |
 | Default setting   |     fish_baseline_concurrent         |      sheep_baseline_concurrent       | pollution_baseline_concurrent |
-| Introuducing universalization | fish_baseline_concurrent_universalization | sheep_baseline_concurrent_universalization | pollution_baseline_concurrent_universalization |
+| Introuducing universalization | fish_baseline_concurrent_universalization | sheep_baseline_concurrent_universalization |pollution_baseline_concurrent_universalization |
 | Ablation: no language | fish_perturbation_no_language | sheep_perturbation_no_language | pollution_perturbation_no_language |
 | Greedy newcomer | fish_perturbation_outsider | - | - |
-| Asymmetry: family background | fish_family_bg_univ | - | - |
+| Asymmetry: family background | fish_family_univ | - | - |
+| Asymmetry: cultural background | fish_culture_univ | - | - |
 
 
 ### Running mixed-llm experiments
