@@ -1,6 +1,0 @@
-[submodule "pathfinder"]
-	path = pathfinder
-	url = git@github.com:giorgiopiatti/pathfinder.git
-[submodule "PathFinder"]
-	path = PathFinder
-	url = https://github.com/giorgiopiatti/PathFinder.git
